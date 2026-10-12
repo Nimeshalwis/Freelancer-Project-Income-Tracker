@@ -65,6 +65,26 @@ For a new local development database, run `mongod --replSet rs0 --dbpath <your-e
 
 The frontend defaults work without a local `.env`. Vite proxies `/api` to `http://localhost:5000`. If you change the backend port, update `API_PROXY_TARGET`. `VITE_API_BASE_URL` is public browser configuration, never a place for secrets. For a future production deployment, configure a reverse proxy for `/api` or set a public API URL before building, and set the backend `CLIENT_ORIGIN` to your frontend origin.
 
+## Sample data
+
+Register an account first, then run from the repository root:
+
+```powershell
+npm run seed --workspace backend -- --email your-account@example.com
+```
+
+From `backend/`, use `npm run seed -- --email your-account@example.com`.
+The script loads `backend/.env` and adds 8 fictional Sri Lankan clients, 16 projects
+(9 completed, 4 in progress, 3 pending), and 26 payments to that account.
+Payments span the current year through today in Asia/Colombo, with fully paid,
+partially paid, and unpaid projects for the dashboard charts. Amounts follow the
+app's existing shared currency (USD). Use `--as-of 2026-10-12` for a fixed sample date.
+
+Existing records and login credentials are preserved. Rerunning skips an intact
+sample dataset; partially removed sample data causes an error rather than overwriting
+changes. Inserts run in one MongoDB transaction, requiring Atlas or a replica set.
+Refresh the dashboard after seeding. No default login account is created.
+
 ## Start development servers
 
 Run in two terminals from the repository root:
