@@ -45,7 +45,7 @@ export function getApiError(error) {
   }
   const status = error?.response?.status ?? 0;
   if (error?.code === 'ERR_NETWORK' || [502, 503, 504].includes(status)) {
-    return { message: 'Cannot reach the API server. Check that the backend is running and try again.', status, errors: [] };
+    return { message: 'Unable to connect. Please try again in a moment.', status, errors: [] };
   }
   return { message: 'Unexpected error. Please try again.', status: 0, errors: [] };
 }

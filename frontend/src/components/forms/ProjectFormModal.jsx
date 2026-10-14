@@ -5,6 +5,7 @@ import { Field, TextInput, TextArea, Select } from '../ui/FormControls.jsx';
 import { validateProject, applyServerErrors, PROJECT_STATUSES } from '../../utils/validation.js';
 import { projectsApi, getApiError } from '../../services/api.js';
 import { useNotify } from '../../context/NotificationContext.jsx';
+import { useCurrency } from '../../context/CurrencyContext.jsx';
 
 const EMPTY = { projectName: '', client: '', fee: '', status: 'Pending', description: '', startDate: '', dueDate: '' };
 
@@ -19,6 +20,7 @@ const toDateInput = (value) => {
 const fromDateInput = (value) => (value ? new Date(value).toISOString() : undefined);
 
 export default function ProjectFormModal({ open, onClose, project, clients = [], onSaved }) {
+  const { currency } = useCurrency();
   const notify = useNotify();
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
@@ -114,7 +116,7 @@ export default function ProjectFormModal({ open, onClose, project, clients = [],
           </Field>
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
-          <Field label="Fee" htmlFor="project-fee" error={errors.fee} required hint="Up to 2 decimals">
+          <Field label={`Fee (${currency})`} htmlFor="project-fee" error={errors.fee} required hint="Up to 2 decimals">
             <TextInput id="project-fee" type="number" min="0" step="0.01" inputMode="decimal" value={values.fee} onChange={set('fee')} error={errors.fee} placeholder="2500.00" />
           </Field>
           <Field label="Start date" htmlFor="project-start" error={errors.startDate}>

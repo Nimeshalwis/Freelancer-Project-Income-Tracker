@@ -11,10 +11,12 @@ import { Select } from '../components/ui/FormControls.jsx';
 import { useApi, useDebouncedValue } from '../hooks/useApi.js';
 import { projectsApi, clientsApi, paymentsApi, getApiError } from '../services/api.js';
 import { useNotify } from '../context/NotificationContext.jsx';
-import { formatCurrency, formatDate } from '../utils/format.js';
+import { formatDate } from '../utils/format.js';
+import { useCurrency } from '../context/CurrencyContext.jsx';
 import { PROJECT_STATUSES } from '../utils/validation.js';
 
 export default function ProjectsPage() {
+  const { formatCurrency } = useCurrency();
   const notify = useNotify();
 
   // Server-side filters per contract: ?status=&client=&search= (single values only).
@@ -122,9 +124,6 @@ export default function ProjectsPage() {
             <Button icon={Plus} onClick={() => { setEditing(null); setFormOpen(true); }}>New project</Button>
           </div>
         </div>
-        <p className="mt-2 text-xs text-slate-400">
-          Filters run server-side via <code className="rounded bg-slate-100 px-1 py-0.5 text-[11px] text-slate-500">GET /api/projects</code> — combined status, client, and name search.
-        </p>
       </Card>
 
       <Card title={`Projects (${(projects || []).length}${hasFilters ? ' matching filters' : ''})`} bodyClassName="p-0">
@@ -245,7 +244,7 @@ export default function ProjectsPage() {
         onConfirm={confirmDelete}
         loading={deleteBusy}
         title="Delete project"
-        message={`Permanently delete “${deleting?.projectName}”? Payments recorded against it must be deleted or reassigned first — the API returns a conflict otherwise.`}
+        message={`Permanently delete “${deleting?.projectName}”? Payments recorded against it must be deleted or reassigned first.`}
         confirmLabel="Delete project"
       />
     </div>

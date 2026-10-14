@@ -5,7 +5,8 @@ import Button from '../ui/Button.jsx';
 import { Field, TextInput, TextArea, Select } from '../ui/FormControls.jsx';
 import { validatePayment, applyServerErrors } from '../../utils/validation.js';
 import { paymentsApi, getApiError } from '../../services/api.js';
-import { formatCurrency, toDateTimeLocal, fromDateTimeLocal } from '../../utils/format.js';
+import { toDateTimeLocal, fromDateTimeLocal } from '../../utils/format.js';
+import { useCurrency } from '../../context/CurrencyContext.jsx';
 import { useNotify } from '../../context/NotificationContext.jsx';
 
 const DEFAULT_METHODS = ['Bank Transfer', 'Cash', 'PayPal', 'Wise', 'Stripe', 'Cheque'];
@@ -42,6 +43,7 @@ function MethodInput({ id, value, onChange, error }) {
 }
 
 export default function PaymentFormModal({ open, onClose, payment, projects = [], preselectedProjectId, onSaved }) {
+  const { currency, formatCurrency } = useCurrency();
   const notify = useNotify();
   const [values, setValues] = useState({ project: '', amount: '', paymentMethod: '', paymentDate: '', notes: '' });
   const [errors, setErrors] = useState({});
@@ -127,12 +129,12 @@ export default function PaymentFormModal({ open, onClose, payment, projects = []
           <div className="flex items-start gap-2 rounded-xl bg-indigo-50/70 px-3.5 py-2.5 text-xs text-indigo-700 ring-1 ring-inset ring-indigo-100">
             <Info size={14} className="mt-0.5 shrink-0" />
             <span>
-              Project fee <strong>{formatCurrency(selectedProject.fee)}</strong>. Payments cannot exceed the remaining balance — the server enforces this atomically.
+              Project fee <strong>{formatCurrency(selectedProject.fee)}</strong>. Payments cannot exceed the remaining balance.
             </span>
           </div>
         )}
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Amount" htmlFor="payment-amount" error={errors.amount} required hint="Must be greater than zero">
+          <Field label={`Amount (${currency})`} htmlFor="payment-amount" error={errors.amount} required hint="Must be greater than zero">
             <TextInput id="payment-amount" type="number" min="0.01" step="0.01" inputMode="decimal" value={values.amount} onChange={set('amount')} error={errors.amount} placeholder="750.00" />
           </Field>
           <Field label="Payment method" htmlFor="payment-method" error={errors.paymentMethod} required>

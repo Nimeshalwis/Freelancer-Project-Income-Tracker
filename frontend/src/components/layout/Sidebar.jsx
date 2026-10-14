@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { useCurrency } from '../../context/CurrencyContext.jsx';
 import { LayoutDashboard, Users, FolderKanban, Wallet, TrendingUp, X, Zap } from 'lucide-react';
 
 export const NAV_ITEMS = [
@@ -10,6 +11,7 @@ export const NAV_ITEMS = [
 ];
 
 export default function Sidebar({ open = false, onClose, summary }) {
+  const { formatCurrency } = useCurrency();
   return (
     <>
       {/* Mobile overlay */}
@@ -58,14 +60,14 @@ export default function Sidebar({ open = false, onClose, summary }) {
           <div className="mx-3 mb-3 rounded-xl bg-slate-800/60 p-4 ring-1 ring-inset ring-slate-700/60">
             <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Outstanding</p>
             <p className="mt-1 text-xl font-bold tracking-tight text-white">
-              {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(summary.pendingPayments ?? 0)}
+              {formatCurrency(summary.pendingPayments ?? 0)}
             </p>
             <p className="mt-0.5 text-xs text-slate-400">pending across all projects</p>
           </div>
         )}
 
         <div className="border-t border-slate-800 px-6 py-4">
-          <p className="text-[11px] text-slate-500">Secure JWT session · v0.1</p>
+          <p className="text-[11px] text-slate-500">Your freelance business at a glance</p>
         </div>
       </aside>
     </>

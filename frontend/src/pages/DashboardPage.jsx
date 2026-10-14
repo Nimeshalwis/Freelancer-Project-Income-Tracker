@@ -9,7 +9,8 @@ import { Spinner, ErrorState } from '../components/ui/States.jsx';
 import { MonthlyIncomeAreaChart, ProjectStatusPieChart, ProjectProgressBars } from '../components/charts/Charts.jsx';
 import { useApi } from '../hooks/useApi.js';
 import { dashboardApi, projectsApi, paymentsApi } from '../services/api.js';
-import { formatCurrency, formatDate } from '../utils/format.js';
+import { formatDate } from '../utils/format.js';
+import { useCurrency } from '../context/CurrencyContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const KPIS = [
@@ -22,6 +23,7 @@ const KPIS = [
 ];
 
 export default function DashboardPage() {
+  const { formatCurrency } = useCurrency();
   const { user } = useAuth();
   const summary = useApi(() => dashboardApi.summary().then((r) => r.data.data), []);
   const monthly = useApi(() => dashboardApi.monthlyIncome(String(new Date().getFullYear())).then((r) => r.data.data), []);

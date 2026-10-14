@@ -58,7 +58,7 @@ export default function LoginPage() {
             Run your freelance business like a <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">SaaS</span>.
           </h1>
           <p className="mt-4 text-[15px] leading-relaxed text-slate-400">
-            Track clients, projects, and payments in one place. Live income analytics, outstanding balances per project, and a secure JWT session — all synced with your own API.
+            Track clients, projects, and payments in one place. See your income, monitor outstanding balances, and stay on top of your business.
           </p>
           <ul className="mt-8 space-y-3 text-sm text-slate-300">
             {['Dashboard KPIs & monthly income charts', 'Client, project & payment management', 'Balance-safe payment recording'].map((item) => (
@@ -112,7 +112,7 @@ export default function LoginPage() {
 
           <p className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs text-slate-400">
             <Loader2 size={12} className="hidden" />
-            Protected by rate-limited authentication · tokens expire automatically
+            Secure sign-in to your account
           </p>
         </div>
       </div>

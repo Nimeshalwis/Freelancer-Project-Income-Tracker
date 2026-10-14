@@ -11,11 +11,13 @@ import { Select } from '../components/ui/FormControls.jsx';
 import { useApi, useDebouncedValue } from '../hooks/useApi.js';
 import { paymentsApi, projectsApi, getApiError } from '../services/api.js';
 import { useNotify } from '../context/NotificationContext.jsx';
-import { formatCurrency, formatDate } from '../utils/format.js';
+import { formatDate } from '../utils/format.js';
+import { useCurrency } from '../context/CurrencyContext.jsx';
 
 // Payments have no server-side query filters in the contract (GET /api/payments takes none),
 // so filtering below is intentionally client-side over the full list.
 export default function PaymentsPage() {
+  const { formatCurrency } = useCurrency();
   const notify = useNotify();
   const { data: payments, loading, error, refetch } = useApi(() => paymentsApi.list(), []);
   const { data: projects } = useApi(() => projectsApi.list(), []);

@@ -13,7 +13,8 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
-import { formatCompactCurrency, formatCurrency, formatMonthLabel } from '../../utils/format.js';
+import { formatMonthLabel } from '../../utils/format.js';
+import { useCurrency } from '../../context/CurrencyContext.jsx';
 
 const AXIS_PROPS = {
   tick: { fill: '#64748b', fontSize: 11 },
@@ -37,6 +38,7 @@ export const STATUS_COLORS = { Pending: '#f59e0b', 'In Progress': '#0ea5e9', Com
 
 /** Monthly income area chart. data: [{ month, totalIncome, paymentCount }] */
 export function MonthlyIncomeAreaChart({ data, height = 280 }) {
+  const { formatCurrency, formatCompactCurrency } = useCurrency();
   const rows = (data || []).map((row) => ({ ...row, label: formatMonthLabel(row.month).replace(/ \d{4}$/, '') }));
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -49,7 +51,7 @@ export function MonthlyIncomeAreaChart({ data, height = 280 }) {
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
         <XAxis dataKey="label" {...AXIS_PROPS} />
-        <YAxis {...AXIS_PROPS} width={56} tickFormatter={formatCompactCurrency} />
+        <YAxis {...AXIS_PROPS} width={80} tickFormatter={formatCompactCurrency} />
         <Tooltip
           {...tooltipStyle}
           formatter={(value) => [formatCurrency(value), 'Income']}
@@ -66,13 +68,14 @@ export function MonthlyIncomeAreaChart({ data, height = 280 }) {
 
 /** Monthly income bar chart. */
 export function MonthlyIncomeBarChart({ data, height = 280 }) {
+  const { formatCurrency, formatCompactCurrency } = useCurrency();
   const rows = (data || []).map((row) => ({ ...row, label: formatMonthLabel(row.month).replace(/ \d{4}$/, '') }));
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
         <XAxis dataKey="label" {...AXIS_PROPS} />
-        <YAxis {...AXIS_PROPS} width={56} tickFormatter={formatCompactCurrency} />
+        <YAxis {...AXIS_PROPS} width={80} tickFormatter={formatCompactCurrency} />
         <Tooltip {...tooltipStyle} cursor={{ fill: 'rgba(99,102,241,0.06)' }} formatter={(value) => [formatCurrency(value), 'Income']} />
         <Bar dataKey="totalIncome" fill="#6366f1" radius={[6, 6, 0, 0]} maxBarSize={36} name="Income" />
       </BarChart>
@@ -110,6 +113,7 @@ export function ProjectStatusPieChart({ data, height = 260 }) {
 
 /** Horizontal fee-vs-paid bars per project. data: [{id, name, fee, paid}] */
 export function ProjectProgressBars({ data }) {
+  const { formatCurrency } = useCurrency();
   if (!data?.length) return <p className="py-8 text-center text-sm text-slate-400">No projects to compare yet.</p>;
   return (
     <ul className="space-y-5">

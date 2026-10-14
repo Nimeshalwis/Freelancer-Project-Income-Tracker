@@ -169,7 +169,7 @@ export default function ClientsPage() {
         onConfirm={confirmDelete}
         loading={deleteBusy}
         title="Delete client"
-        message={`Permanently delete “${deleting?.name}”? Their projects must be deleted or reassigned first — the server blocks this with a conflict while projects still reference the client.`}
+        message={`Permanently delete “${deleting?.name}”? Their projects must be deleted or reassigned first.`}
         confirmLabel="Delete client"
       />
     </div>

@@ -9,9 +9,11 @@ import { Spinner, ErrorState } from '../components/ui/States.jsx';
 import { MonthlyIncomeAreaChart, MonthlyIncomeBarChart, ProjectStatusPieChart } from '../components/charts/Charts.jsx';
 import { useApi } from '../hooks/useApi.js';
 import { dashboardApi, projectsApi, paymentsApi } from '../services/api.js';
-import { formatCurrency, formatDate } from '../utils/format.js';
+import { formatDate } from '../utils/format.js';
+import { useCurrency } from '../context/CurrencyContext.jsx';
 
 export default function IncomePage() {
+  const { formatCurrency } = useCurrency();
   const thisYear = new Date().getFullYear();
   const [year, setYear] = useState(String(thisYear));
   const [chartType, setChartType] = useState('area');
@@ -108,14 +110,14 @@ export default function IncomePage() {
           {monthly.loading ? <Spinner className="py-12" /> : monthly.error ? <ErrorState error={monthly.error} onRetry={monthly.refetch} /> : <Chart data={monthly.data} height={320} />}
         </Card>
 
-        <Card title="Project mix" subtitle="GET /api/dashboard/project-status">
+        <Card title="Project mix" subtitle="Count by status">
           {statusData.loading ? <Spinner className="py-12" /> : statusData.error ? <ErrorState error={statusData.error} onRetry={statusData.refetch} /> : <ProjectStatusPieChart data={statusData.data} height={300} />}
         </Card>
       </div>
 
       <Card
         title="Outstanding balances"
-        subtitle="Aggregated client-side from GET /api/projects and GET /api/payments (fee − recorded payments)"
+        subtitle="Project fees minus recorded payments"
         bodyClassName="p-0"
       >
         {projects.loading || !payments ? (

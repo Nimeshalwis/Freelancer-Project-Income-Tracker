@@ -1,18 +1,19 @@
-const currencyFormatter = new Intl.NumberFormat('en-US', {
+const currencyFormatters = Object.fromEntries(['USD', 'LKR'].map((currency) => [currency, new Intl.NumberFormat('en-US', {
   style: 'currency',
-  currency: 'USD',
+  currency,
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
-});
+})]));
 
-// The backend assumes one shared currency but does not expose it — see flagged contract gaps.
-export const formatCurrency = (value) => currencyFormatter.format(Number.isFinite(value) ? value : 0);
+export const formatCurrency = (value, currency = 'USD') =>
+  (currencyFormatters[currency] || currencyFormatters.USD).format(Number.isFinite(value) ? value : 0);
 
-export const formatCompactCurrency = (value) => {
+export const formatCompactCurrency = (value, currency = 'USD') => {
   const n = Number.isFinite(value) ? value : 0;
-  if (Math.abs(n) >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (Math.abs(n) >= 10_000) return `$${(n / 1000).toFixed(1)}k`;
-  return currencyFormatter.format(n);
+  const symbol = currency === 'LKR' ? 'Rs ' : '$';
+  if (Math.abs(n) >= 1_000_000) return `${symbol}${(n / 1_000_000).toFixed(1)}M`;
+  if (Math.abs(n) >= 10_000) return `${symbol}${(n / 1000).toFixed(1)}k`;
+  return formatCurrency(n, currency);
 };
 
 export const formatDate = (value) => {

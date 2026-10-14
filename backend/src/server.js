@@ -26,6 +26,9 @@ try {
 } catch (error) {
   // Avoid logging connection strings, which may contain credentials.
   console.error(error.name === 'Error' && !env.mongodbUri ? error.message : `MongoDB startup failed (${error.name}). Check MONGODB_URI and database availability.`);
+  if (/ENOTFOUND|EAI_AGAIN|querySrv|queryTxt|getaddrinfo/.test(error.message)) {
+    console.error('MongoDB DNS resolution failed. Check your DNS connection or configure MONGODB_DNS_SERVERS in backend/.env.');
+  }
   await mongoose.disconnect();
   process.exitCode = 1;
 }
